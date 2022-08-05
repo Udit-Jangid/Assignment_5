@@ -1,12 +1,21 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect} from 'react'
 import '../index.css';
+
+const getLocalItems = () => {
+    let list = localStorage.getItem('lists');
+    if(list){
+        return JSON.parse(localStorage.getItem('lists'));
+    }else{
+        return [];
+    }
+}
 
 const Todo = () => {
     const inputElement = useRef();
     const listElement = useRef();
     const listBtn = useRef();
     const [inputData, setInputData] = useState('');
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(getLocalItems());
     const [toggleSubmit, setToggleSubmit] = useState(true);
     // const [isVisible, setIsVisible] = useState(true);
     const [eItem, setEItem] = useState(null);
@@ -42,6 +51,11 @@ const Todo = () => {
         });
         setItems(delItems);
     }
+
+    useEffect(() => {
+        localStorage.setItem('lists', JSON.stringify(items))
+    }, [items])
+    
 
     const editItem = (id) => {
         let newEditItem = items.find((ele) => {
